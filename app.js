@@ -1,4 +1,4 @@
-const store = [
+let store = [
     { basePrice: 0, taxRate: 0, tipPercent: 0 }
 ];
 
@@ -6,6 +6,13 @@ function generatePage(store) {
     let subTotal = calcSubtotal(store);
     let newTip = calcTip(store);
     let customerTotal = Number.parseFloat(Number(subTotal) + Number(newTip)).toFixed(2);
+    let finalTipTotal = Number.parseFloat(Number(calcTipTotal(store))).toFixed(2);
+    let mealCount = Number(store.length - 1);
+    let avgTip = Number.parseFloat(0).toFixed(2);
+
+    if(mealCount !== 0) {
+        avgTip = Number(finalTipTotal / mealCount);
+    }
 
     return `
     <div class="container">
@@ -63,9 +70,9 @@ function generatePage(store) {
                             <div class="charges-inner-text">Average Tip Per Meal:</div>
                         </div>
                         <div class="charges-right-container">
-                            <div class="charges-inner-text meal-tip-total">&nbsp; 0.00 </div>
-                            <div class="charges-inner-text meal-count">&nbsp; 0</div>
-                            <div class="charges-inner-text meal-average">&nbsp; 0.00</div>
+                            <div class="charges-inner-text meal-tip-total">&nbsp; ${finalTipTotal} </div>
+                            <div class="charges-inner-text meal-count">&nbsp; ${mealCount}</div>
+                            <div class="charges-inner-text meal-average">&nbsp; ${avgTip}</div>
                         </div>
                     </div>
             </div>
@@ -99,33 +106,30 @@ function calcTip(meals) {
     return Number.parseFloat(tip).toFixed(2);
 }
 
-// Calculate total (add calcSubtotal and calcTips) 
-function calcTotal(meals) {
-
-}
-
 // Calculate tip total (add all tips)
 function calcTipTotal(meals) {
+    console.log(`ran calcTipTotal`);
+    let tipTotal = 0;
 
-}
+    meals.forEach(item => {
+        let tip = Number(item.basePrice) * Number(item.tipPercent) / 100;
+        tipTotal += tip;
+    });
 
-// Meal count (return store.length)
-function mealCount(meals) {
-
-}
-
-// Take calcTipTotal / mealCount
-function calcAverage(meals) {
-
+    return Number.parseFloat(tipTotal).toFixed(2);
 }
 
 // Reset page
-/*function handleReset() {
-    store = [
-        { basePrice: 0, taxRate: 0, tipPercent: 0 }
-    ];
-    renderPage();
-}*/
+function handleReset() {
+    $('main').on('click', '.reset-button', event => {
+        store = [
+            { basePrice: 0, taxRate: 0, tipPercent: 0 }
+        ];
+        renderPage();
+    });
+
+
+}
 
 // Render page
 function renderPage() {
@@ -173,6 +177,7 @@ function handleSubmitClicked() {
 function handleCalc() {
     renderPage();
     handleSubmitClicked();
+    handleReset();
 }
 
 $(handleCalc);

@@ -3,6 +3,10 @@ const store = [
 ];
 
 function generatePage(store) {
+    let subTotal = calcSubtotal(store);
+    let newTip = calcTip(store);
+    let customerTotal = Number.parseFloat(Number(subTotal) + Number(newTip)).toFixed(2);
+
     return `
     <div class="container">
         <div class="meal-details">
@@ -37,16 +41,16 @@ function generatePage(store) {
                 <div class="charges-title">Customer Charges</div>
                     <div class="charges-container">
                         <div class="charges-left-container">
-                            <div class="charges-inner-text">Subtotal</div>
+                            <div class="charges-inner-text">Subtotal:</div>
                             <div class="charges-inner-text">Tip</div>
                             <div class="line left"></div>
                             <div class="charges-inner-text">Total:</div>
                         </div>
                         <div class="charges-right-container">
-                            <div class="charges-inner-text meal-subtotal">&nbsp; 0.00</div>
-                            <div class="charges-inner-text meal-tip">&nbsp; 0.00</div>  
+                            <div class="charges-inner-text meal-subtotal">&nbsp; ${subTotal}</div>
+                            <div class="charges-inner-text meal-tip">&nbsp; ${newTip}</div>  
                             <div class="line"></div>
-                            <div class="charges-inner-text meal-total">&nbsp; 0.00</div>
+                            <div class="charges-inner-text meal-total">&nbsp; ${customerTotal}</div>
                         </div>
                     </div>
             </div>
@@ -77,12 +81,22 @@ function generatePage(store) {
 
 // Calculate subtotal (base meals + (base meals*tax rate))
 function calcSubtotal(meals) {
+    console.log(`ran calcSubTotal`);
+    let base = Number(meals[meals.length-1].basePrice);
+    let tax = Number(meals[meals.length-1].taxRate) / 100;
+    let subTotal = base + (base*tax);
 
+    return Number.parseFloat(subTotal).toFixed(2);
 }
 
 // Calculate tip for current meal
-function calcTips(meals) {
+function calcTip(meals) {
+    console.log(`ran calcTips`);
+    let base = Number(meals[meals.length-1].basePrice);
+    let tipPercent = Number(meals[meals.length-1].tipPercent) / 100;
+    let tip = base * tipPercent;
 
+    return Number.parseFloat(tip).toFixed(2);
 }
 
 // Calculate total (add calcSubtotal and calcTips) 
@@ -106,12 +120,12 @@ function calcAverage(meals) {
 }
 
 // Reset page
-function handleReset() {
+/*function handleReset() {
     store = [
         { basePrice: 0, taxRate: 0, tipPercent: 0 }
     ];
     renderPage();
-}
+}*/
 
 // Render page
 function renderPage() {
@@ -159,7 +173,6 @@ function handleSubmitClicked() {
 function handleCalc() {
     renderPage();
     handleSubmitClicked();
-    handleReset();
 }
 
 $(handleCalc);

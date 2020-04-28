@@ -6,6 +6,10 @@ h1 {
     text-align: center;
 }
 
+button {
+    cursor: pointer;
+}
+
 .container {
     display: flex;
     flex-direction: row;

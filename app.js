@@ -39,7 +39,7 @@ function generatePage(store) {
                 </div>
                 <div class="meal-button-container">
                     <button type="submit" class="meal-button">Submit</button>
-                    <button type="submit" class="meal-button">Cancel</button>
+                    <button type="submit" class="meal-button-cancel">Cancel</button>
                 </div>
             </form>
         </div>
@@ -150,6 +150,13 @@ function addItemToStore(base, rate, percent) {
     store.push({ basePrice: base, taxRate: rate, tipPercent: percent});
 }
 
+// Handle click cancel
+function handleCancelClicked() {
+    $('main').on('click', '.meal-button-cancel', event => {
+        renderPage();
+    });
+}
+
 // Handle click submit
 function handleSubmitClicked() {
     $('main').on('submit', '#meal-form', event => {
@@ -178,6 +185,7 @@ function handleCalc() {
     renderPage();
     handleSubmitClicked();
     handleReset();
+    handleCancelClicked();
 }
 
 $(handleCalc);

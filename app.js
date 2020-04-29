@@ -11,7 +11,7 @@ function generatePage(store) {
     let avgTip = Number.parseFloat(0).toFixed(2);
 
     if(mealCount !== 0) {
-        avgTip = Number(finalTipTotal / mealCount);
+        avgTip = Number(finalTipTotal / mealCount).toFixed(2);
     }
 
     return `
